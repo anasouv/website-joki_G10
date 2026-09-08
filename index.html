@@ -37,39 +37,170 @@
                    placeholder="Masukkan ID Game"
                    required>
 
-            <label for="rank">Pilih Rank</label>
-            <select id="rank"
-                    name="rank"
-                    onchange="kiraHarga()"
+
+            <!-- ========================= -->
+            <!-- RANK PERMULAAN -->
+            <!-- ========================= -->
+
+            <h3>🟢 RANK PERMULAAN</h3>
+
+            <label for="rankMula">Pilih Rank</label>
+
+            <select id="rankMula"
+                    name="rank_mula"
+                    onchange="kemaskiniBintangMula()"
                     required>
 
-                <option value="">-- Pilih Rank --</option>
-                <option value="Epic">Epic - RM2 ⭐</option>
-                <option value="Legend">Legend - RM3 ⭐</option>
-                <option value="Mythic">Mythic - RM5 ⭐</option>
-                <option value="Mythic Honor">Mythic Honor - RM6 ⭐</option>
-                <option value="Mythic Glory">Mythic Glory - RM7 ⭐</option>
-                <option value="Mythic Immortal">Mythic Immortal - RM8 ⭐</option>
+                <option value="">-- Pilih Rank Permulaan --</option>
+
+                <optgroup label="EPIC">
+                    <option value="Epic V">Epic V</option>
+                    <option value="Epic IV">Epic IV</option>
+                    <option value="Epic III">Epic III</option>
+                    <option value="Epic II">Epic II</option>
+                    <option value="Epic I">Epic I</option>
+                </optgroup>
+
+                <optgroup label="LEGEND">
+                    <option value="Legend V">Legend V</option>
+                    <option value="Legend IV">Legend IV</option>
+                    <option value="Legend III">Legend III</option>
+                    <option value="Legend II">Legend II</option>
+                    <option value="Legend I">Legend I</option>
+                </optgroup>
+
+                <option value="Mythic">Mythic</option>
+                <option value="Mythic Honor">Mythic Honor</option>
+                <option value="Mythic Glory">Mythic Glory</option>
+                <option value="Mythic Immortal">Mythic Immortal</option>
 
             </select>
 
-            <label for="bintangMula">Bintang Mula</label>
+
+            <label for="bintangMula">Bintang Permulaan</label>
+
+            <select id="bintangMula"
+                    name="bintang_mula"
+                    onchange="kiraHarga()"
+                    required>
+
+                <option value="">-- Pilih Bintang --</option>
+
+            </select>
+
             <input type="number"
-                   id="bintangMula"
-                   name="bintang_mula"
-                   min="0"
-                   placeholder="Contoh: 10"
+                   id="bintangMulaImmortal"
+                   name="bintang_mula_immortal"
+                   min="100"
+                   placeholder="Masukkan bintang 100+"
                    oninput="kiraHarga()"
-                   required>
+                   style="display:none;">
+
+
+            <!-- ========================= -->
+            <!-- RANK AKHIR -->
+            <!-- ========================= -->
+
+            <h3>🔵 RANK AKHIR</h3>
+
+            <label for="rankAkhir">Pilih Rank</label>
+
+            <select id="rankAkhir"
+                    name="rank_akhir"
+                    onchange="kemaskiniBintangAkhir()"
+                    required>
+
+                <option value="">-- Pilih Rank Akhir --</option>
+
+                <optgroup label="EPIC">
+                    <option value="Epic V">Epic V</option>
+                    <option value="Epic IV">Epic IV</option>
+                    <option value="Epic III">Epic III</option>
+                    <option value="Epic II">Epic II</option>
+                    <option value="Epic I">Epic I</option>
+                </optgroup>
+
+                <optgroup label="LEGEND">
+                    <option value="Legend V">Legend V</option>
+                    <option value="Legend IV">Legend IV</option>
+                    <option value="Legend III">Legend III</option>
+                    <option value="Legend II">Legend II</option>
+                    <option value="Legend I">Legend I</option>
+                </optgroup>
+
+                <option value="Mythic">Mythic</option>
+                <option value="Mythic Honor">Mythic Honor</option>
+                <option value="Mythic Glory">Mythic Glory</option>
+                <option value="Mythic Immortal">Mythic Immortal</option>
+
+            </select>
+
 
             <label for="bintangAkhir">Bintang Akhir</label>
+
+            <select id="bintangAkhir"
+                    name="bintang_akhir"
+                    onchange="kiraHarga()"
+                    required>
+
+                <option value="">-- Pilih Bintang --</option>
+
+            </select>
+
             <input type="number"
-                   id="bintangAkhir"
-                   name="bintang_akhir"
-                   min="0"
-                   placeholder="Contoh: 20"
+                   id="bintangAkhirImmortal"
+                   name="bintang_akhir_immortal"
+                   min="100"
+                   placeholder="Masukkan bintang 100+"
                    oninput="kiraHarga()"
-                   required>
+                   style="display:none;">
+
+
+            <!-- DATA UNTUK EMAIL -->
+
+            <input type="hidden"
+                   id="jumlahBintangData"
+                   name="jumlah_bintang">
+
+            <input type="hidden"
+                   id="hargaBintangData"
+                   name="harga_per_bintang">
+
+            <input type="hidden"
+                   id="jumlahHargaData"
+                   name="jumlah_harga">
+
+
+            <!-- RINGKASAN -->
+
+            <div class="summary">
+
+                <div class="summary-row">
+                    <span>Rank Permulaan</span>
+                    <strong id="paparRankMula">-</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Rank Akhir</span>
+                    <strong id="paparRankAkhir">-</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Jumlah Bintang</span>
+                    <strong id="jumlahBintang">0 ⭐</strong>
+                </div>
+
+                <div class="summary-row">
+                    <span>Harga / Bintang</span>
+                    <strong id="hargaBintang">RM0</strong>
+                </div>
+
+                <div class="total">
+                    <span>JUMLAH HARGA</span>
+                    <strong id="jumlahHarga">RM0</strong>
+                </div>
+
+            </div>
 
 
             <!-- REQUEST ROLE -->
@@ -110,43 +241,6 @@
                    placeholder="Nama Hero 3">
 
 
-            <!-- DATA HARGA UNTUK EMAIL -->
-
-            <input type="hidden"
-                   id="jumlahBintangData"
-                   name="jumlah_bintang">
-
-            <input type="hidden"
-                   id="hargaBintangData"
-                   name="harga_per_bintang">
-
-            <input type="hidden"
-                   id="jumlahHargaData"
-                   name="jumlah_harga">
-
-
-            <!-- RINGKASAN -->
-
-            <div class="summary">
-
-                <div class="summary-row">
-                    <span>Harga / Bintang</span>
-                    <strong id="hargaBintang">RM0</strong>
-                </div>
-
-                <div class="summary-row">
-                    <span>Jumlah Bintang</span>
-                    <strong id="jumlahBintang">0 ⭐</strong>
-                </div>
-
-                <div class="total">
-                    <span>JUMLAH HARGA</span>
-                    <strong id="jumlahHarga">RM0</strong>
-                </div>
-
-            </div>
-
-
             <!-- SUBMIT -->
 
             <button type="submit" id="submitBtn">
@@ -166,6 +260,7 @@
     </div>
 
 </div>
+
 
 <script src="script.js"></script>
 

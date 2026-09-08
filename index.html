@@ -51,6 +51,18 @@
                        min="0" placeholder="Contoh: 20"
                        oninput="kiraHarga()" required>
 
+                <label for="role">Request Role</label>
+                <input type="text" id="role" name="request_role"
+                       placeholder="Contoh: Jungler">
+
+                <label for="hero">Request Hero</label>
+                <select id="hero" name="request_hero">
+                    <option value="">-- Pilih Hero --</option>
+                    <option value="Hero 1">Hero 1</option>
+                    <option value="Hero 2">Hero 2</option>
+                    <option value="Hero 3">Hero 3</option>
+                </select>
+
                 <input type="hidden" id="jumlahBintangData" name="jumlah_bintang">
                 <input type="hidden" id="hargaBintangData" name="harga_per_bintang">
                 <input type="hidden" id="jumlahHargaData" name="jumlah_harga">

@@ -8,97 +8,146 @@
 </head>
 
 <body>
-    <div class="container">
 
-        <div class="header">
-            <h1>🔥 JOKI STORE 🔥</h1>
-            <p>G10 STORE OFFICIAL</p>
-        </div>
+<div class="container">
 
-        <div class="card">
-            <h2>📝 TEMPAHAN JOKI</h2>
-
-            <form id="tempahanForm"
-                  action="https://formspree.io/f/xkjnqlak"
-                  method="POST">
-
-                <label for="nama">Nama</label>
-                <input type="text" id="nama" name="nama"
-                       placeholder="Masukkan nama anda" required>
-
-                <label for="gameid">ID Game</label>
-                <input type="text" id="gameid" name="gameid"
-                       placeholder="Masukkan ID Game" required>
-
-                <label for="rank">Pilih Rank</label>
-                <select id="rank" name="rank" onchange="kiraHarga()" required>
-                    <option value="">-- Pilih Rank --</option>
-                    <option value="Epic">Epic - RM2 ⭐</option>
-                    <option value="Legend">Legend - RM3 ⭐</option>
-                    <option value="Mythic">Mythic - RM5 ⭐</option>
-                    <option value="Mythic Honor">Mythic Honor - RM6 ⭐</option>
-                    <option value="Mythic Glory">Mythic Glory - RM7 ⭐</option>
-                    <option value="Mythic Immortal">Mythic Immortal - RM8 ⭐</option>
-                </select>
-
-                <label for="bintangMula">Bintang Mula</label>
-                <input type="number" id="bintangMula" name="bintang_mula"
-                       min="0" placeholder="Contoh: 10"
-                       oninput="kiraHarga()" required>
-
-                <label for="bintangAkhir">Bintang Akhir</label>
-                <input type="number" id="bintangAkhir" name="bintang_akhir"
-                       min="0" placeholder="Contoh: 20"
-                       oninput="kiraHarga()" required>
-
-                <label for="role">Request Role</label>
-                <input type="text" id="role" name="request_role"
-                       placeholder="Contoh: Jungler">
-
-                <label for="hero">Request Hero</label>
-                <select id="hero" name="request_hero">
-                    <option value="">-- Pilih Hero --</option>
-                    <option value="Hero 1">Hero 1</option>
-                    <option value="Hero 2">Hero 2</option>
-                    <option value="Hero 3">Hero 3</option>
-                </select>
-
-                <input type="hidden" id="jumlahBintangData" name="jumlah_bintang">
-                <input type="hidden" id="hargaBintangData" name="harga_per_bintang">
-                <input type="hidden" id="jumlahHargaData" name="jumlah_harga">
-
-                <div class="summary">
-                    <div class="summary-row">
-                        <span>Harga / Bintang</span>
-                        <strong id="hargaBintang">RM0</strong>
-                    </div>
-
-                    <div class="summary-row">
-                        <span>Jumlah Bintang</span>
-                        <strong id="jumlahBintang">0 ⭐</strong>
-                    </div>
-
-                    <div class="total">
-                        <span>JUMLAH HARGA</span>
-                        <strong id="jumlahHarga">RM0</strong>
-                    </div>
-                </div>
-
-                <button type="submit" id="submitBtn">
-                    🚀 SUBMIT TEMPAHAN
-                </button>
-            </form>
-
-            <div id="mesej"></div>
-        </div>
-
-        <div class="footer">
-            <p>© 2026 JOKI STORE</p>
-            <p>G10 STORE OFFICIAL</p>
-        </div>
-
+    <div class="header">
+        <h1>🔥 JOKI STORE 🔥</h1>
+        <p>G10 STORE OFFICIAL</p>
     </div>
 
-    <script src="script.js"></script>
+    <div class="card">
+        <h2>📋 TEMPAHAN JOKI</h2>
+
+        <form
+            id="tempahanForm"
+            action="https://formspree.io/f/xkjnqlak"
+            method="POST"
+        >
+
+            <!-- NAMA -->
+            <label for="nama">Nama</label>
+            <input
+                type="text"
+                id="nama"
+                name="nama"
+                placeholder="Masukkan nama anda"
+                required
+            >
+
+            <!-- ID GAME -->
+            <label for="gameid">ID Game</label>
+            <input
+                type="text"
+                id="gameid"
+                name="gameid"
+                placeholder="Masukkan ID Game"
+                required
+            >
+
+            <!-- RANK -->
+            <label for="rank">Pilih Rank</label>
+            <select
+                id="rank"
+                name="rank"
+                onchange="kiraHarga()"
+                required
+            >
+                <option value="">-- Pilih Rank --</option>
+                <option value="Warrior">Warrior</option>
+                <option value="Elite">Elite</option>
+                <option value="Master">Master</option>
+                <option value="Grandmaster">Grandmaster</option>
+                <option value="Epic">Epic</option>
+                <option value="Legend">Legend</option>
+                <option value="Mythic">Mythic</option>
+                <option value="Mythical Honor">Mythical Honor</option>
+                <option value="Mythical Glory">Mythical Glory</option>
+                <option value="Mythical Immortal">Mythical Immortal</option>
+            </select>
+
+            <!-- REQUEST ROLE -->
+            <label for="role">Request Role</label>
+            <select
+                id="role"
+                name="role"
+                required
+            >
+                <option value="">-- Pilih Role --</option>
+                <option value="Jungler">1. Jungler</option>
+                <option value="Gold">2. Gold</option>
+                <option value="EXP">3. EXP</option>
+                <option value="Roam">4. Roam</option>
+                <option value="Mid">5. Mid</option>
+            </select>
+
+            <!-- REQUEST HERO -->
+            <label>Request Hero</label>
+
+            <input
+                type="text"
+                id="hero1"
+                name="hero1"
+                placeholder="Nama Hero 1"
+            >
+
+            <input
+                type="text"
+                id="hero2"
+                name="hero2"
+                placeholder="Nama Hero 2"
+            >
+
+            <input
+                type="text"
+                id="hero3"
+                name="hero3"
+                placeholder="Nama Hero 3"
+            >
+
+            <!-- JUMLAH STAR -->
+            <label for="star">Jumlah Star</label>
+            <input
+                type="number"
+                id="star"
+                name="star"
+                min="1"
+                placeholder="Contoh: 10"
+                onchange="kiraHarga()"
+                required
+            >
+
+            <!-- HARGA -->
+            <label for="harga">Jumlah Harga</label>
+            <input
+                type="text"
+                id="harga"
+                name="harga"
+                value="RM 0"
+                readonly
+            >
+
+            <!-- EMAIL -->
+            <label for="email">Email</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Masukkan email anda"
+                required
+            >
+
+            <!-- SUBMIT -->
+            <button type="submit">
+                📩 SUBMIT TEMPAHAN
+            </button>
+
+        </form>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
 </body>
 </html>

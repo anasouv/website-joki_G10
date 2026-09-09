@@ -1,5 +1,5 @@
 // ==========================================
-// HARGA SETIAP RANK
+// HARGA RANK
 // ==========================================
 
 const hargaRank = {
@@ -29,160 +29,112 @@ const nilaiRank = {
     "Legend III": 35,
     "Legend II": 40,
     "Legend I": 45
+
 };
 
 
 // ==========================================
-// DAPATKAN NILAI BINTANG
+// TUKAR RANK + BINTANG KEPADA NILAI
 // ==========================================
 
 function dapatkanNilaiBintang(rank, bintang) {
 
-    if (!rank || bintang === "" || bintang === null) {
+    const nombor = Number(bintang);
+
+    if (!rank || Number.isNaN(nombor)) {
         return null;
     }
 
-    const stars = Number(bintang);
-
-    if (isNaN(stars)) {
-        return null;
+    // EPIC + LEGEND
+    if (nilaiRank[rank] !== undefined) {
+        return nilaiRank[rank] + nombor;
     }
 
-
-    // ======================================
-    // EPIC & LEGEND
-    // ======================================
-
-    if (Object.prototype.hasOwnProperty.call(nilaiRank, rank)) {
-
-        if (stars < 1 || stars > 5) {
-            return null;
-        }
-
-        return nilaiRank[rank] + stars;
-    }
-
-
-    // ======================================
     // MYTHIC
-    // ======================================
-
     if (rank === "Mythic") {
-
-        if (stars < 1 || stars > 24) {
-            return null;
-        }
-
-        return 50 + stars;
+        return 50 + nombor;
     }
 
-
-    // ======================================
     // MYTHIC HONOR
-    // ======================================
-
     if (rank === "Mythic Honor") {
-
-        if (stars < 25 || stars > 49) {
-            return null;
-        }
-
-        return 50 + stars;
+        return 50 + nombor;
     }
 
-
-    // ======================================
     // MYTHIC GLORY
-    // ======================================
-
     if (rank === "Mythic Glory") {
-
-        if (stars < 50 || stars > 99) {
-            return null;
-        }
-
-        return 50 + stars;
+        return 50 + nombor;
     }
 
-
-    // ======================================
     // MYTHIC IMMORTAL
-    // ======================================
+    // 100 = kedudukan 150
+    // 101 = kedudukan 151
+    // 200 = kedudukan 250
 
     if (rank === "Mythic Immortal") {
 
-        if (stars < 100) {
+        if (nombor < 100) {
             return null;
         }
 
-        return 150 + (stars - 100);
+        return 150 + (nombor - 100);
     }
-
 
     return null;
 }
 
 
 // ==========================================
-// HARGA MENGIKUT KEDUDUKAN GLOBAL
+// HARGA MENGIKUT KEDUDUKAN
 // ==========================================
 
-function dapatkanHargaDaripadaKedudukan(kedudukan) {
+function dapatkanHargaDaripadaKedudukan(posisi) {
 
     // EPIC
-    // Kedudukan 1 - 25
-    if (kedudukan <= 25) {
+    if (posisi <= 25) {
         return 2;
     }
 
-
     // LEGEND
-    // Kedudukan 26 - 50
-    if (kedudukan <= 50) {
+    if (posisi <= 50) {
         return 3;
     }
 
-
-    // MYTHIC
-    // Kedudukan 51 - 74
-    if (kedudukan <= 74) {
+    // MYTHIC 1 - 24
+    if (posisi <= 74) {
         return 5;
     }
 
-
-    // MYTHIC HONOR
-    // Kedudukan 75 - 99
-    if (kedudukan <= 99) {
+    // MYTHIC HONOR 25 - 49
+    if (posisi <= 99) {
         return 6;
     }
 
-
-    // MYTHIC GLORY
-    // Kedudukan 100 - 149
-    if (kedudukan <= 149) {
+    // MYTHIC GLORY 50 - 99
+    if (posisi <= 149) {
         return 7;
     }
 
-
-    // MYTHIC IMMORTAL
-    // Kedudukan 150+
+    // MYTHIC IMMORTAL 100+
     return 8;
 }
 
 
 // ==========================================
-// TAMBAH PILIHAN BINTANG
+// BUAT PILIHAN BINTANG
 // ==========================================
 
-function tambahPilihanBintang(select, mula, akhir) {
+function buatPilihanBintang(select, min, max) {
 
-    for (let i = mula; i <= akhir; i++) {
+    select.innerHTML = `
+        <option value="">-- Pilih Bintang --</option>
+    `;
+
+    for (let i = min; i <= max; i++) {
 
         const option = document.createElement("option");
 
         option.value = i;
-
-        option.textContent = i + " ⭐";
+        option.textContent = `${i} ⭐`;
 
         select.appendChild(option);
     }
@@ -190,7 +142,7 @@ function tambahPilihanBintang(select, mula, akhir) {
 
 
 // ==========================================
-// KEMASKINI BINTANG PERMULAAN
+// KEMASKINI RANK PERMULAAN
 // ==========================================
 
 function kemaskiniBintangMula() {
@@ -205,52 +157,23 @@ function kemaskiniBintangMula() {
         document.getElementById("bintangMulaImmortal");
 
 
-    // Kosongkan pilihan lama
-    select.innerHTML =
-        '<option value="">-- Pilih Bintang --</option>';
+    // RESET
+    select.style.display = "block";
+    select.required = false;
 
-
-    // Papar rank
-    document.getElementById("paparRankMula").textContent =
-        rank || "-";
-
-
-    // Reset input Immortal
     inputImmortal.style.display = "none";
-
     inputImmortal.required = false;
 
-    inputImmortal.value = "";
 
-
-    // Jika belum pilih rank
+    // TIADA RANK
     if (!rank) {
 
-        select.style.display = "block";
+        select.innerHTML = `
+            <option value="">-- Pilih Bintang --</option>
+        `;
 
-        select.required = true;
-
-        kiraHarga();
-
-        return;
-    }
-
-
-    // ======================================
-    // MYTHIC IMMORTAL
-    // ======================================
-
-    if (rank === "Mythic Immortal") {
-
-        select.style.display = "none";
-
-        select.required = false;
-
-        inputImmortal.style.display = "block";
-
-        inputImmortal.required = true;
-
-        inputImmortal.min = 100;
+        select.value = "";
+        inputImmortal.value = "";
 
         kiraHarga();
 
@@ -258,86 +181,90 @@ function kemaskiniBintangMula() {
     }
 
 
-    // ======================================
     // EPIC
-    // ======================================
-
     if (rank.startsWith("Epic")) {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             1,
             5
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // LEGEND
-    // ======================================
-
     else if (rank.startsWith("Legend")) {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             1,
             5
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // MYTHIC
-    // ======================================
-
     else if (rank === "Mythic") {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             1,
             24
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // MYTHIC HONOR
-    // ======================================
-
     else if (rank === "Mythic Honor") {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             25,
             49
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // MYTHIC GLORY
-    // ======================================
-
     else if (rank === "Mythic Glory") {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             50,
             99
         );
+
+        select.required = true;
     }
 
 
-    select.style.display = "block";
+    // MYTHIC IMMORTAL
+    else if (rank === "Mythic Immortal") {
 
-    select.required = true;
+        select.style.display = "none";
+        select.required = false;
+        select.value = "";
+
+        inputImmortal.style.display = "block";
+        inputImmortal.required = true;
+        inputImmortal.value = "";
+    }
+
 
     kiraHarga();
 }
 
 
 // ==========================================
-// KEMASKINI BINTANG AKHIR
+// KEMASKINI RANK AKHIR
 // ==========================================
 
 function kemaskiniBintangAkhir() {
@@ -352,52 +279,23 @@ function kemaskiniBintangAkhir() {
         document.getElementById("bintangAkhirImmortal");
 
 
-    // Kosongkan pilihan lama
-    select.innerHTML =
-        '<option value="">-- Pilih Bintang --</option>';
+    // RESET
+    select.style.display = "block";
+    select.required = false;
 
-
-    // Papar rank
-    document.getElementById("paparRankAkhir").textContent =
-        rank || "-";
-
-
-    // Reset input Immortal
     inputImmortal.style.display = "none";
-
     inputImmortal.required = false;
 
-    inputImmortal.value = "";
 
-
-    // Jika belum pilih rank
+    // TIADA RANK
     if (!rank) {
 
-        select.style.display = "block";
+        select.innerHTML = `
+            <option value="">-- Pilih Bintang --</option>
+        `;
 
-        select.required = true;
-
-        kiraHarga();
-
-        return;
-    }
-
-
-    // ======================================
-    // MYTHIC IMMORTAL
-    // ======================================
-
-    if (rank === "Mythic Immortal") {
-
-        select.style.display = "none";
-
-        select.required = false;
-
-        inputImmortal.style.display = "block";
-
-        inputImmortal.required = true;
-
-        inputImmortal.min = 100;
+        select.value = "";
+        inputImmortal.value = "";
 
         kiraHarga();
 
@@ -405,174 +303,231 @@ function kemaskiniBintangAkhir() {
     }
 
 
-    // ======================================
     // EPIC
-    // ======================================
-
     if (rank.startsWith("Epic")) {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             1,
             5
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // LEGEND
-    // ======================================
-
     else if (rank.startsWith("Legend")) {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             1,
             5
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // MYTHIC
-    // ======================================
-
     else if (rank === "Mythic") {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             1,
             24
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // MYTHIC HONOR
-    // ======================================
-
     else if (rank === "Mythic Honor") {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             25,
             49
         );
+
+        select.required = true;
     }
 
 
-    // ======================================
     // MYTHIC GLORY
-    // ======================================
-
     else if (rank === "Mythic Glory") {
 
-        tambahPilihanBintang(
+        buatPilihanBintang(
             select,
             50,
             99
         );
+
+        select.required = true;
     }
 
 
-    select.style.display = "block";
+    // MYTHIC IMMORTAL
+    else if (rank === "Mythic Immortal") {
 
-    select.required = true;
+        select.style.display = "none";
+        select.required = false;
+        select.value = "";
+
+        inputImmortal.style.display = "block";
+        inputImmortal.required = true;
+        inputImmortal.value = "";
+    }
+
 
     kiraHarga();
 }
 
 
 // ==========================================
-// DAPATKAN BINTANG PERMULAAN
+// DATA RANK MULA
 // ==========================================
 
-function dapatkanBintangMula() {
+function dapatkanDataMula() {
 
     const rank =
         document.getElementById("rankMula").value;
 
+    if (!rank) {
+        return null;
+    }
 
+
+    let bintang;
+
+
+    // IMMORTAL
     if (rank === "Mythic Immortal") {
 
-        return Number(
+        bintang = Number(
             document.getElementById(
                 "bintangMulaImmortal"
             ).value
         );
+
+
+        if (
+            Number.isNaN(bintang) ||
+            bintang < 100
+        ) {
+            return null;
+        }
+
+
+        return {
+            rank: rank,
+            bintang: bintang,
+            nilai: dapatkanNilaiBintang(
+                rank,
+                bintang
+            )
+        };
     }
 
 
-    return Number(
+    // RANK BIASA
+    bintang = Number(
         document.getElementById(
             "bintangMula"
         ).value
     );
+
+
+    if (
+        Number.isNaN(bintang) ||
+        bintang <= 0
+    ) {
+        return null;
+    }
+
+
+    return {
+        rank: rank,
+        bintang: bintang,
+        nilai: dapatkanNilaiBintang(
+            rank,
+            bintang
+        )
+    };
 }
 
 
 // ==========================================
-// DAPATKAN BINTANG AKHIR
+// DATA RANK AKHIR
 // ==========================================
 
-function dapatkanBintangAkhir() {
+function dapatkanDataAkhir() {
 
     const rank =
         document.getElementById("rankAkhir").value;
 
+    if (!rank) {
+        return null;
+    }
 
+
+    let bintang;
+
+
+    // IMMORTAL
     if (rank === "Mythic Immortal") {
 
-        return Number(
+        bintang = Number(
             document.getElementById(
                 "bintangAkhirImmortal"
             ).value
         );
+
+
+        if (
+            Number.isNaN(bintang) ||
+            bintang < 100
+        ) {
+            return null;
+        }
+
+
+        return {
+            rank: rank,
+            bintang: bintang,
+            nilai: dapatkanNilaiBintang(
+                rank,
+                bintang
+            )
+        };
     }
 
 
-    return Number(
+    // RANK BIASA
+    bintang = Number(
         document.getElementById(
             "bintangAkhir"
         ).value
     );
-}
 
 
-// ==========================================
-// RESET PAPARAN HARGA
-// ==========================================
-
-function resetPaparanHarga() {
-
-    document.getElementById(
-        "jumlahBintang"
-    ).textContent = "0 ⭐";
+    if (
+        Number.isNaN(bintang) ||
+        bintang <= 0
+    ) {
+        return null;
+    }
 
 
-    document.getElementById(
-        "hargaBintang"
-    ).textContent = "RM0";
-
-
-    document.getElementById(
-        "jumlahHarga"
-    ).textContent = "RM0";
-
-
-    document.getElementById(
-        "jumlahBintangData"
-    ).value = "";
-
-
-    document.getElementById(
-        "hargaBintangData"
-    ).value = "";
-
-
-    document.getElementById(
-        "jumlahHargaData"
-    ).value = "";
+    return {
+        rank: rank,
+        bintang: bintang,
+        nilai: dapatkanNilaiBintang(
+            rank,
+            bintang
+        )
+    };
 }
 
 
@@ -582,987 +537,680 @@ function resetPaparanHarga() {
 
 function kiraHarga() {
 
-    const rankMula =
-        document.getElementById(
-            "rankMula"
-        ).value;
-
-
-    const rankAkhir =
-        document.getElementById(
-            "rankAkhir"
-        ).value;
-
-
-    const bintangMula =
-        dapatkanBintangMula();
-
-
-    const bintangAkhir =
-        dapatkanBintangAkhir();
-
-
-    // Papar rank
-    document.getElementById(
-        "paparRankMula"
-    ).textContent =
-        rankMula || "-";
-
-
-    document.getElementById(
-        "paparRankAkhir"
-    ).textContent =
-        rankAkhir || "-";
-
-
-    // Belum lengkap
-    if (
-        !rankMula ||
-        !rankAkhir ||
-        !bintangMula ||
-        !bintangAkhir
-    ) {
-
-        resetPaparanHarga();
-
-        return;
-    }
-
-
-    // Dapatkan nilai
-    const mula =
-        dapatkanNilaiBintang(
-            rankMula,
-            bintangMula
-        );
-
-
-    const akhir =
-        dapatkanNilaiBintang(
-            rankAkhir,
-            bintangAkhir
-        );
-
-
-    if (
-        mula === null ||
-        akhir === null
-    ) {
-
-        resetPaparanHarga();
-
-        return;
-    }
-
-
-    // Rank akhir mesti lebih tinggi
-    if (akhir <= mula) {
-
-        document.getElementById(
-            "jumlahBintang"
-        ).textContent =
-            "Tidak sah";
-
-
-        document.getElementById(
-            "hargaBintang"
-        ).textContent =
-            "RM0";
-
-
-        document.getElementById(
-            "jumlahHarga"
-        ).textContent =
-            "RM0";
-
-
-        document.getElementById(
-            "jumlahBintangData"
-        ).value = "";
-
-
-        document.getElementById(
-            "hargaBintangData"
-        ).value = "";
-
-
-        document.getElementById(
-            "jumlahHargaData"
-        ).value = "";
-
-
-        return;
-    }
-
-
-    // ======================================
-    // KIRA HARGA SATU-SATU BINTANG
-    // ======================================
-
-    let jumlahHarga = 0;
+    const hargaBintang =
+        document.getElementById("hargaBintang");
 
     const jumlahBintang =
-        akhir - mula;
+        document.getElementById("jumlahBintang");
+
+    const jumlahHarga =
+        document.getElementById("jumlahHarga");
+
+    const paparRankMula =
+        document.getElementById("paparRankMula");
+
+    const paparRankAkhir =
+        document.getElementById("paparRankAkhir");
+
+    const jumlahBintangData =
+        document.getElementById("jumlahBintangData");
+
+    const hargaBintangData =
+        document.getElementById("hargaBintangData");
+
+    const jumlahHargaData =
+        document.getElementById("jumlahHargaData");
 
 
+    const mula = dapatkanDataMula();
+    const akhir = dapatkanDataAkhir();
+
+
+    // PAPAR RANK
+    paparRankMula.textContent =
+        mula
+            ? `${mula.rank} ⭐${mula.bintang}`
+            : "-";
+
+    paparRankAkhir.textContent =
+        akhir
+            ? `${akhir.rank} ⭐${akhir.bintang}`
+            : "-";
+
+
+    // BELUM LENGKAP
+    if (!mula || !akhir) {
+
+        hargaBintang.textContent = "RM0";
+
+        jumlahBintang.textContent = "0 ⭐";
+
+        jumlahHarga.textContent = "RM0";
+
+        jumlahBintangData.value = "0";
+
+        hargaBintangData.value =
+            "Mengikut rank";
+
+        jumlahHargaData.value = "RM0";
+
+        return;
+    }
+
+
+    // AKHIR MESTI LEBIH TINGGI
+    if (akhir.nilai <= mula.nilai) {
+
+        hargaBintang.textContent = "RM0";
+
+        jumlahBintang.textContent = "0 ⭐";
+
+        jumlahHarga.textContent = "RM0";
+
+        jumlahBintangData.value = "0";
+
+        hargaBintangData.value =
+            "Mengikut rank";
+
+        jumlahHargaData.value = "RM0";
+
+        return;
+    }
+
+
+    let total = 0;
+    let jumlah = 0;
+
+
+    // KIRA SATU PERSATU BINTANG
     for (
-        let kedudukan = mula + 1;
-        kedudukan <= akhir;
-        kedudukan++
+        let posisi = mula.nilai + 1;
+        posisi <= akhir.nilai;
+        posisi++
     ) {
 
         const harga =
             dapatkanHargaDaripadaKedudukan(
-                kedudukan
+                posisi
             );
 
-
-        jumlahHarga += harga;
+        total += harga;
+        jumlah++;
     }
 
 
-    // Harga purata
-    const hargaPurata =
-        jumlahHarga / jumlahBintang;
+    hargaBintang.textContent =
+        "Mengikut rank";
 
+    jumlahBintang.textContent =
+        `${jumlah} ⭐`;
 
-    // ======================================
-    // PAPAR HASIL
-    // ======================================
+    jumlahHarga.textContent =
+        `RM${total}`;
 
-    document.getElementById(
-        "jumlahBintang"
-    ).textContent =
-        jumlahBintang + " ⭐";
+    jumlahBintangData.value =
+        `${jumlah} bintang`;
 
+    hargaBintangData.value =
+        "Epic RM2 | Legend RM3 | Mythic RM5 | Honor RM6 | Glory RM7 | Immortal RM8";
 
-    document.getElementById(
-        "hargaBintang"
-    ).textContent =
-        "RM" +
-        hargaPurata.toFixed(2);
-
-
-    document.getElementById(
-        "jumlahHarga"
-    ).textContent =
-        "RM" +
-        jumlahHarga.toFixed(2);
-
-
-    // ======================================
-    // DATA FORMSPREE
-    // ======================================
-
-    document.getElementById(
-        "jumlahBintangData"
-    ).value =
-        jumlahBintang;
-
-
-    document.getElementById(
-        "hargaBintangData"
-    ).value =
-        "RM" +
-        hargaPurata.toFixed(2);
-
-
-    document.getElementById(
-        "jumlahHargaData"
-    ).value =
-        "RM" +
-        jumlahHarga.toFixed(2);
+    jumlahHargaData.value =
+        `RM${total}`;
 }
+
+
+// ==========================================
+// SUBMIT BORANG
+// ==========================================
+
+document
+    .getElementById("tempahanForm")
+    .addEventListener(
+        "submit",
+        async function(event) {
+
+            event.preventDefault();
+
+
+            const form = event.target;
+
+            const submitBtn =
+                document.getElementById(
+                    "submitBtn"
+                );
+
+            const mesej =
+                document.getElementById(
+                    "mesej"
+                );
+
+
+            // ==================================
+            // AMBIL DATA
+            // ==================================
+
+            const nama =
+                document.getElementById(
+                    "nama"
+                ).value.trim();
+
+            const gameid =
+                document.getElementById(
+                    "gameid"
+                ).value.trim();
+
+            const telefon =
+                document.getElementById(
+                    "telefon"
+                ).value.trim();
+
+            const mula =
+                dapatkanDataMula();
+
+            const akhir =
+                dapatkanDataAkhir();
+
+
+            // ==================================
+            // SEMAK NAMA
+            // ==================================
+
+            if (nama === "") {
+
+                alert(
+                    "Sila masukkan nama."
+                );
+
+                return;
+            }
+
+
+            // ==================================
+            // SEMAK ID GAME
+            // ==================================
+
+            if (gameid === "") {
+
+                alert(
+                    "Sila masukkan ID Game."
+                );
+
+                return;
+            }
+
+
+            // ==================================
+            // SEMAK TELEFON
+            // ==================================
+
+            if (telefon === "") {
+
+                alert(
+                    "Sila masukkan nombor telefon."
+                );
+
+                return;
+            }
+
+
+            // ==================================
+            // SEMAK RANK MULA
+            // ==================================
+
+            if (!mula) {
+
+                alert(
+                    "Sila pilih rank dan bintang permulaan."
+                );
+
+                return;
+            }
+
+
+            // ==================================
+            // SEMAK RANK AKHIR
+            // ==================================
+
+            if (!akhir) {
+
+                alert(
+                    "Sila pilih rank dan bintang akhir."
+                );
+
+                return;
+            }
+
+
+            // ==================================
+            // SEMAK RANK AKHIR
+            // ==================================
+
+            if (akhir.nilai <= mula.nilai) {
+
+                alert(
+                    "Rank/Bintang akhir mesti lebih tinggi daripada permulaan."
+                );
+
+                return;
+            }
+
+
+            // ==================================
+            // KIRA HARGA TERAKHIR
+            // ==================================
+
+            kiraHarga();
+
+
+            const total =
+                document.getElementById(
+                    "jumlahHarga"
+                ).textContent;
+
+            const jumlah =
+                document.getElementById(
+                    "jumlahBintang"
+                ).textContent;
+
+
+            const role =
+                document.getElementById(
+                    "role"
+                ).value.trim()
+                || "Tiada";
+
+
+            const hero1 =
+                document.getElementById(
+                    "hero1"
+                ).value.trim();
+
+            const hero2 =
+                document.getElementById(
+                    "hero2"
+                ).value.trim();
+
+            const hero3 =
+                document.getElementById(
+                    "hero3"
+                ).value.trim();
+
+
+            const heroList =
+                [
+                    hero1,
+                    hero2,
+                    hero3
+                ]
+                .filter(Boolean)
+                .join(", ")
+                || "Tiada";
+
+
+            // ==================================
+            // BUTTON LOADING
+            // ==================================
+
+            submitBtn.disabled = true;
+
+            submitBtn.textContent =
+                "⏳ MENGHANTAR...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        form.action,
+                        {
+                            method: "POST",
+
+                            body:
+                                new FormData(
+                                    form
+                                ),
+
+                            headers: {
+                                "Accept":
+                                    "application/json"
+                            }
+                        }
+                    );
+
+
+                // ==================================
+                // BERJAYA
+                // ==================================
+
+                if (response.ok) {
+
+
+                    // ==================================
+                    // PAPAR RESIT
+                    // ==================================
+
+                    mesej.style.display =
+                        "block";
+
+
+                    mesej.innerHTML = `
+
+                        <div>
+
+                            <h3>
+                                ✅ TEMPAHAN BERJAYA!
+                            </h3>
+
+                            <hr>
+
+                            👤 <strong>Nama:</strong>
+                            ${escapeHtml(nama)}
+
+                            <br><br>
+
+                            🎮 <strong>ID Game:</strong>
+                            ${escapeHtml(gameid)}
+
+                            <br><br>
+
+                            📱 <strong>Nombor Telefon:</strong>
+                            ${escapeHtml(telefon)}
+
+                            <br><br>
+
+                            🟢 <strong>Rank Permulaan:</strong>
+                            ${escapeHtml(mula.rank)}
+                            ⭐${mula.bintang}
+
+                            <br><br>
+
+                            🔵 <strong>Rank Akhir:</strong>
+                            ${escapeHtml(akhir.rank)}
+                            ⭐${akhir.bintang}
+
+                            <br><br>
+
+                            ⭐ <strong>Jumlah:</strong>
+                            ${escapeHtml(jumlah)}
+
+                            <br><br>
+
+                            🎯 <strong>Request Role:</strong>
+                            ${escapeHtml(role)}
+
+                            <br><br>
+
+                            🦸 <strong>Request Hero:</strong>
+                            ${escapeHtml(heroList)}
+
+                            <br><br>
+
+                            💰 <strong>JUMLAH HARGA:</strong>
+                            ${escapeHtml(total)}
+
+                            <hr>
+
+                            💳 <strong>PEMBAYARAN</strong>
+
+                            <br><br>
+
+                            Sila buat pembayaran ke nombor:
+
+                            <br>
+
+                            <strong>
+                                01117957091
+                            </strong>
+
+                            <br><br>
+
+                            📸 <strong>
+                                DISYORKAN UNTUK SCREENSHOT
+                            </strong>
+
+                            <br><br>
+
+                            Disyorkan untuk screenshot
+                            resit tempahan ini selepas submit
+                            sebagai bukti pesanan dan pembayaran.
+
+                        </div>
+
+                    `;
+
+
+                    // ==================================
+                    // RESET BORANG
+                    // ==================================
+
+                    form.reset();
+
+
+                    // RESET SELECT BINTANG
+                    const bintangMula =
+                        document.getElementById(
+                            "bintangMula"
+                        );
+
+                    const bintangAkhir =
+                        document.getElementById(
+                            "bintangAkhir"
+                        );
+
+
+                    bintangMula.innerHTML = `
+                        <option value="">
+                            -- Pilih Bintang --
+                        </option>
+                    `;
+
+
+                    bintangAkhir.innerHTML = `
+                        <option value="">
+                            -- Pilih Bintang --
+                        </option>
+                    `;
+
+
+                    // PAPAR SELECT
+                    bintangMula.style.display =
+                        "block";
+
+                    bintangAkhir.style.display =
+                        "block";
+
+
+                    // JANGAN REQUIRED SELEPAS RESET
+                    bintangMula.required =
+                        false;
+
+                    bintangAkhir.required =
+                        false;
+
+
+                    // RESET INPUT IMMORTAL
+                    const immortalMula =
+                        document.getElementById(
+                            "bintangMulaImmortal"
+                        );
+
+                    const immortalAkhir =
+                        document.getElementById(
+                            "bintangAkhirImmortal"
+                        );
+
+
+                    immortalMula.style.display =
+                        "none";
+
+                    immortalAkhir.style.display =
+                        "none";
+
+
+                    immortalMula.required =
+                        false;
+
+                    immortalAkhir.required =
+                        false;
+
+
+                    immortalMula.value = "";
+                    immortalAkhir.value = "";
+
+
+                    // RESET KIRAAN
+                    document.getElementById(
+                        "paparRankMula"
+                    ).textContent = "-";
+
+                    document.getElementById(
+                        "paparRankAkhir"
+                    ).textContent = "-";
+
+                    document.getElementById(
+                        "jumlahBintang"
+                    ).textContent = "0 ⭐";
+
+                    document.getElementById(
+                        "hargaBintang"
+                    ).textContent = "RM0";
+
+                    document.getElementById(
+                        "jumlahHarga"
+                    ).textContent = "RM0";
+
+
+                    // RESET DATA TERSEMBUNYI
+                    document.getElementById(
+                        "jumlahBintangData"
+                    ).value = "0";
+
+                    document.getElementById(
+                        "hargaBintangData"
+                    ).value =
+                        "Mengikut rank";
+
+                    document.getElementById(
+                        "jumlahHargaData"
+                    ).value = "RM0";
+
+
+                    // ==================================
+                    // SCROLL KE RESIT
+                    // ==================================
+
+                    mesej.scrollIntoView({
+                        behavior: "smooth",
+                        block: "center"
+                    });
+
+                }
+
+
+                // ==================================
+                // GAGAL
+                // ==================================
+
+                else {
+
+                    mesej.style.display =
+                        "block";
+
+                    mesej.innerHTML = `
+
+                        ❌ <strong>
+                        Gagal menghantar tempahan.
+                        </strong>
+
+                        <br><br>
+
+                        Sila cuba lagi.
+
+                    `;
+                }
+
+
+            }
+
+
+            // ==================================
+            // ERROR INTERNET
+            // ==================================
+
+            catch (error) {
+
+                mesej.style.display =
+                    "block";
+
+                mesej.innerHTML = `
+
+                    ❌ <strong>
+                    Tiada sambungan.
+                    </strong>
+
+                    <br><br>
+
+                    Sila semak internet
+                    dan cuba hantar semula.
+
+                `;
+            }
+
+
+            // ==================================
+            // AKTIFKAN BUTTON SEMULA
+            // ==================================
+
+            finally {
+
+                submitBtn.disabled =
+                    false;
+
+                submitBtn.textContent =
+                    "🚀 SUBMIT TEMPAHAN";
+            }
+
+        }
+    );
 
 
 // ==========================================
 // ESCAPE HTML
-// Elak input pengguna masuk sebagai HTML
 // ==========================================
 
-function escapeHtml(text) {
+function escapeHtml(value) {
 
-    return String(text)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
 }
 
 
 // ==========================================
-// SUBMIT TEMPAHAN
+// MULA
 // ==========================================
 
-const form =
-    document.getElementById(
-        "tempahanForm"
-    );
-
-
-const mesej =
-    document.getElementById(
-        "mesej"
-    );
-
-
-const submitBtn =
-    document.getElementById(
-        "submitBtn"
-    );
-
-
-// ==========================================
-// FORM SUBMIT
-// ==========================================
-
-form.addEventListener(
-    "submit",
-    async function(event) {
-
-        event.preventDefault();
-
-
-        // ======================================
-        // DATA ASAS
-        // ======================================
-
-        const nama =
-            document.getElementById(
-                "nama"
-            ).value.trim();
-
-
-        const gameid =
-            document.getElementById(
-                "gameid"
-            ).value.trim();
-
-
-        const telefon =
-            document.getElementById(
-                "telefon"
-            ).value.trim();
-
-
-        const rankMula =
-            document.getElementById(
-                "rankMula"
-            ).value;
-
-
-        const rankAkhir =
-            document.getElementById(
-                "rankAkhir"
-            ).value;
-
-
-        const bintangMula =
-            dapatkanBintangMula();
-
-
-        const bintangAkhir =
-            dapatkanBintangAkhir();
-
-
-        const role =
-            document.getElementById(
-                "role"
-            ).value;
-
-
-        const hero1 =
-            document.getElementById(
-                "hero1"
-            ).value.trim();
-
-
-        const hero2 =
-            document.getElementById(
-                "hero2"
-            ).value.trim();
-
-
-        const hero3 =
-            document.getElementById(
-                "hero3"
-            ).value.trim();
-
-
-        // ======================================
-        // SEMAK DATA
-        // ======================================
-
-        if (!nama) {
-
-            alert(
-                "Sila masukkan nama."
-            );
-
-            return;
-        }
-
-
-        if (!gameid) {
-
-            alert(
-                "Sila masukkan ID Game."
-            );
-
-            return;
-        }
-
-
-        if (!telefon) {
-
-            alert(
-                "Sila masukkan nombor telefon."
-            );
-
-            return;
-        }
-
-
-        if (!rankMula) {
-
-            alert(
-                "Sila pilih Rank Permulaan."
-            );
-
-            return;
-        }
-
-
-        if (!rankAkhir) {
-
-            alert(
-                "Sila pilih Rank Akhir."
-            );
-
-            return;
-        }
-
-
-        if (!bintangMula) {
-
-            alert(
-                "Sila pilih bintang permulaan."
-            );
-
-            return;
-        }
-
-
-        if (!bintangAkhir) {
-
-            alert(
-                "Sila pilih bintang akhir."
-            );
-
-            return;
-        }
-
-
-        // ======================================
-        // NILAI RANK
-        // ======================================
-
-        const nilaiMula =
-            dapatkanNilaiBintang(
-                rankMula,
-                bintangMula
-            );
-
-
-        const nilaiAkhir =
-            dapatkanNilaiBintang(
-                rankAkhir,
-                bintangAkhir
-            );
-
-
-        if (
-            nilaiMula === null ||
-            nilaiAkhir === null
-        ) {
-
-            alert(
-                "Pilihan rank atau bintang tidak sah."
-            );
-
-            return;
-        }
-
-
-        // ======================================
-        // PASTIKAN AKHIR LEBIH TINGGI
-        // ======================================
-
-        if (
-            nilaiAkhir <= nilaiMula
-        ) {
-
-            alert(
-                "Rank Akhir mesti lebih tinggi daripada Rank Permulaan."
-            );
-
-            return;
-        }
-
-
-        // ======================================
-        // KIRA JUMLAH
-        // ======================================
-
-        const jumlahBintang =
-            nilaiAkhir - nilaiMula;
-
-
-        let jumlahHarga = 0;
-
-
-        for (
-            let kedudukan = nilaiMula + 1;
-            kedudukan <= nilaiAkhir;
-            kedudukan++
-        ) {
-
-            jumlahHarga +=
-                dapatkanHargaDaripadaKedudukan(
-                    kedudukan
-                );
-        }
-
-
-        const hargaPurata =
-            jumlahHarga /
-            jumlahBintang;
-
-
-        // ======================================
-        // SIMPAN DATA HIDDEN
-        // ======================================
-
-        document.getElementById(
-            "jumlahBintangData"
-        ).value =
-            jumlahBintang;
-
-
-        document.getElementById(
-            "hargaBintangData"
-        ).value =
-            "RM" +
-            hargaPurata.toFixed(2);
-
-
-        document.getElementById(
-            "jumlahHargaData"
-        ).value =
-            "RM" +
-            jumlahHarga.toFixed(2);
-
-
-        // ======================================
-        // BUTANG MENGHANTAR
-        // ======================================
-
-        submitBtn.disabled = true;
-
-        submitBtn.textContent =
-            "⏳ MENGHANTAR...";
-
-
-        // ======================================
-        // FORMSPREE
-        // ======================================
-
-        const formData =
-            new FormData(form);
-
-
-        // ======================================
-        // TIMEOUT 15 SAAT
-        // Supaya tidak sangkut selama-lamanya
-        // ======================================
-
-        const controller =
-            new AbortController();
-
-
-        const timeout =
-            setTimeout(
-                function() {
-
-                    controller.abort();
-
-                },
-                15000
-            );
-
-
-        try {
-
-            const response =
-                await fetch(
-                    form.action,
-                    {
-                        method: "POST",
-
-                        body: formData,
-
-                        headers: {
-                            "Accept":
-                                "application/json"
-                        },
-
-                        signal:
-                            controller.signal
-                    }
-                );
-
-
-            // Hentikan timer
-            clearTimeout(timeout);
-
-
-            // ==================================
-            // SEMAK RESPONSE
-            // ==================================
-
-            if (!response.ok) {
-
-                let errorMessage =
-                    "Gagal menghantar tempahan.";
-
-                try {
-
-                    const data =
-                        await response.json();
-
-                    if (
-                        data &&
-                        data.errors &&
-                        data.errors.length > 0
-                    ) {
-
-                        errorMessage =
-                            data.errors
-                                .map(
-                                    error =>
-                                        error.message
-                                )
-                                .join(", ");
-                    }
-
-                } catch (jsonError) {
-
-                    // Abaikan jika response
-                    // bukan JSON
-                }
-
-
-                throw new Error(
-                    errorMessage
-                );
-            }
-
-
-            // ==================================
-            // WHATSAPP
-            // ==================================
-
-            const nomborWhatsApp =
-                "601117957091";
-
-
-            const mesejWhatsApp =
-                encodeURIComponent(
-                    "Assalamualaikum, saya sudah membuat tempahan joki. Saya ingin menghantar bukti pembayaran."
-                );
-
-
-            const linkWhatsApp =
-                `https://wa.me/${nomborWhatsApp}?text=${mesejWhatsApp}`;
-
-
-            // ==================================
-            // DATA UNTUK RESIT
-            // ==================================
-
-            const namaSafe =
-                escapeHtml(nama);
-
-
-            const gameidSafe =
-                escapeHtml(gameid);
-
-
-            const telefonSafe =
-                escapeHtml(telefon);
-
-
-            const rankMulaSafe =
-                escapeHtml(rankMula);
-
-
-            const rankAkhirSafe =
-                escapeHtml(rankAkhir);
-
-
-            const roleSafe =
-                escapeHtml(role);
-
-
-            const hero1Safe =
-                escapeHtml(hero1 || "-");
-
-
-            const hero2Safe =
-                escapeHtml(hero2 || "-");
-
-
-            const hero3Safe =
-                escapeHtml(hero3 || "-");
-
-
-            // ==================================
-            // PAPAR RESIT
-            // ==================================
-
-            mesej.innerHTML = `
-
-                <div
-                    class="receipt-success"
-                    style="
-                        margin-top:20px;
-                        padding:20px;
-                        border-radius:12px;
-                        background:#f0fff4;
-                        border:2px solid #25D366;
-                        text-align:center;
-                    "
-                >
-
-                    <h3>
-                        ✅ TEMPAHAN BERJAYA!
-                    </h3>
-
-
-                    <p>
-                        Terima kasih kerana membuat
-                        tempahan di G10 STORE.
-                    </p>
-
-
-                    <hr>
-
-
-                    <h4>
-                        📋 MAKLUMAT TEMPAHAN
-                    </h4>
-
-
-                    <p>
-                        👤 Nama:
-                        <strong>
-                            ${namaSafe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        🎮 ID Game:
-                        <strong>
-                            ${gameidSafe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        📱 Telefon:
-                        <strong>
-                            ${telefonSafe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        🟢 Rank Mula:
-                        <strong>
-                            ${rankMulaSafe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        🔵 Rank Akhir:
-                        <strong>
-                            ${rankAkhirSafe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        ⭐ Jumlah Bintang:
-                        <strong>
-                            ${jumlahBintang}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        🎯 Role:
-                        <strong>
-                            ${roleSafe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        🦸 Hero 1:
-                        <strong>
-                            ${hero1Safe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        🦸 Hero 2:
-                        <strong>
-                            ${hero2Safe}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        🦸 Hero 3:
-                        <strong>
-                            ${hero3Safe}
-                        </strong>
-                    </p>
-
-
-                    <hr>
-
-
-                    <p>
-                        💰
-                        <strong>
-                            SILA BUAT PEMBAYARAN KE:
-                        </strong>
-                    </p>
-
-
-                    <a
-                        href="${linkWhatsApp}"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style="
-                            display:inline-block;
-                            font-size:24px;
-                            font-weight:bold;
-                            color:#25D366;
-                            text-decoration:none;
-                            margin:10px 0;
-                        "
-                    >
-                        📱 01117957091
-                    </a>
-
-
-                    <p
-                        style="
-                            font-size:14px;
-                        "
-                    >
-                        Tekan nombor di atas
-                        untuk terus masuk ke WhatsApp.
-                    </p>
-
-
-                    <hr>
-
-
-                    <p>
-                        📸
-                        <strong>
-                            Selepas membuat pembayaran,
-                        </strong>
-                        sila screenshot resit pembayaran
-                        dan hantar kepada admin melalui WhatsApp.
-                    </p>
-
-
-                    <p>
-                        ⭐ Jumlah Bintang:
-                        <strong>
-                            ${jumlahBintang}
-                        </strong>
-                    </p>
-
-
-                    <p>
-                        💵 Jumlah Harga:
-                        <strong>
-                            RM${jumlahHarga.toFixed(2)}
-                        </strong>
-                    </p>
-
-
-                    <p
-                        style="
-                            margin-top:15px;
-                            font-size:13px;
-                            color:#555;
-                        "
-                    >
-                        ℹ️ Borang anda dikekalkan.
-                        Anda boleh melihat semula
-                        maklumat tempahan di atas.
-                    </p>
-
-                </div>
-
-            `;
-
-
-            // ==================================
-            // PENTING:
-            // JANGAN GUNA form.reset()
-            //
-            // Semua pilihan pengguna
-            // KEKAL DI DALAM BORANG
-            // ==================================
-
-
-            // Aktifkan semula butang
-            submitBtn.disabled = false;
-
-            submitBtn.textContent =
-                "🚀 SUBMIT TEMPAHAN";
-
-
-            // Scroll ke resit
-            setTimeout(
-                function() {
-
-                    mesej.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    });
-
-                },
-                100
-            );
-
-
-        } catch (error) {
-
-            // ==================================
-            // HENTIKAN TIMER
-            // ==================================
-
-            clearTimeout(timeout);
-
-
-            console.error(
-                "Ralat submit:",
-                error
-            );
-
-
-            // ==================================
-            // MESEJ ERROR
-            // ==================================
-
-            let teksError =
-                "Sila cuba lagi.";
-
-
-            if (
-                error.name ===
-                "AbortError"
-            ) {
-
-                teksError =
-                    "Sambungan mengambil masa terlalu lama. Sila semak internet dan cuba lagi.";
-
-            } else if (
-                error.message
-            ) {
-
-                teksError =
-                    error.message;
-            }
-
-
-            mesej.innerHTML = `
-
-                <div
-                    style="
-                        margin-top:20px;
-                        padding:15px;
-                        border-radius:10px;
-                        background:#fff0f0;
-                        border:2px solid red;
-                        text-align:center;
-                    "
-                >
-
-                    <h3>
-                        ❌ GAGAL MENGHANTAR
-                    </h3>
-
-
-                    <p>
-                        ${escapeHtml(teksError)}
-                    </p>
-
-
-                    <p>
-                        Maklumat borang anda
-                        masih dikekalkan.
-                    </p>
-
-
-                    <p>
-                        Sila cuba tekan
-                        <strong>
-                            SUBMIT TEMPAHAN
-                        </strong>
-                        sekali lagi.
-                    </p>
-
-                </div>
-
-            `;
-
-
-            // ==================================
-            // AKTIFKAN SEMULA BUTANG
-            // ==================================
-
-            submitBtn.disabled = false;
-
-            submitBtn.textContent =
-                "🚀 SUBMIT TEMPAHAN";
-
-
-            // Scroll ke error
-            setTimeout(
-                function() {
-
-                    mesej.scrollIntoView({
-                        behavior: "smooth",
-                        block: "center"
-                    });
-
-                },
-                100
-            );
-        }
-
-    }
-);
+kiraHarga();
